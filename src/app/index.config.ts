@@ -1,3 +1,5 @@
+/// <reference path="../../.tmp/typings/angularjs/angular.d.ts" />
+
 module mapSearch {
   'use strict';
 
