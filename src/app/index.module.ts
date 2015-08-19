@@ -7,6 +7,7 @@
 /// <reference path="index.run.ts" />
 /// <reference path="main/main.controller.ts" />
 /// <reference path="../app/components/navbar/navbar.directive.ts" />
+/// <reference path="../app/components/searchArea/searchArea.directive.ts" />
 /// <reference path="../app/components/malarkey/malarkey.directive.ts" />
 /// <reference path="../app/components/webDevTec/webDevTec.service.ts" />
 /// <reference path="../app/components/githubContributor/githubContributor.service.ts" />
@@ -31,5 +32,6 @@ module mapSearch {
     .service('webDevTec', WebDevTecService)
     .controller('MainController', MainController)
     .directive('acmeNavbar', acmeNavbar)
+    .directive('searchArea', searchArea)
     .directive('acmeMalarkey', acmeMalarkey);
 }

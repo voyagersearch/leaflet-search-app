@@ -5,6 +5,7 @@ bower_components/
 .tmp/
 dist/
 
+src/app/**/*.js
+src/app/**/*.js.map
 
-app/
 typings/

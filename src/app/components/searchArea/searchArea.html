@@ -1,0 +1,93 @@
+<div class="container">
+
+<div class="row">
+  TODO... show a map!!!!
+  <div class="vs-map">
+    <leaflet height="100%" center="mapConfig.center" tiles="mapConfig.base"></leaflet>
+  </div>
+</div>
+
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="col-sm-3">
+
+        <div>
+          <div>
+            <b>Query:</b>
+            <a href="#" ng-click="$event.preventDefault(); showConfig();"><i class="pull-right fa fa-cog"></i></a>
+          </div>
+
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search for..." ng-model="searchConfig.req.q"
+                   ng-keyup="$event.keyCode == 13 && doSearch()"/>
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button" ng-click="doSearch()"><i class="fa fa-search"></i></button>
+              </span>
+          </div>
+
+          <div>
+            <button ng-repeat="fq in searchConfig.req.fq"
+                    ng-click="removeFilter(fq)"
+                    class="btn btn-default btn-sm" type="button">{{fq}} <i class="fa fa-times"></i></button>
+          </div>
+        </div>
+        <br/><br/>
+
+
+        <accordion close-others="false" >
+          <accordion-group
+            ng-repeat="facet in filters"
+            ng-init="status.open = true"
+            is-open="status.open">
+            <accordion-heading>
+              {{facet.name}} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+            </accordion-heading>
+
+            <div ng-repeat="bucket in facet.value.buckets">
+              <button
+                ng-if="bucket.count < srsp.facets.count"
+                ng-click="filterResults(facet.name, bucket.val)"
+                type="button"
+                class="btn btn-sm btn-default btn-block"
+                style="padding-left: 5px; text-align: left; white-space: normal; border:0px"
+                >
+                {{bucket.val}} ({{bucket.count}})
+              </button>
+              <div ng-if="bucket.count >= srsp.facets.count">
+                {{bucket.val}} ({{bucket.count}})
+              </div>
+            </div>
+
+            <button ng-if="facet.value.buckets.length > 4"
+                    ng-click="showAllFacetValues(facet.name)"
+                    type="button" class="btn btn-sm btn-default btn-block"
+                    style="padding-left: 5px; text-align: left; white-space: normal; border:0px" >
+              Show All....
+              <i class="pull-right fa fa-plus-square-o"></i>
+            </button>
+
+          </accordion-group>
+        </accordion>
+      </div>
+      <div class="col-sm-9">
+
+        This is the top...
+        <pre>{{srsp.facets.count | json}}</pre>
+
+        <table class="table table-hover">
+          <thead>
+          <th ng-repeat="finfo in searchConfig.view">{{finfo.display}}</th>
+          </thead>
+          <tbody>
+          <tr ng-repeat="doc in docs" ng-click="showResult(doc)">
+            <td ng-repeat="finfo in searchConfig.view">{{doc[finfo.field]}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
