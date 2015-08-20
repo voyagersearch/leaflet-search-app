@@ -4,6 +4,7 @@ module mapSearch {
   'use strict';
 
   export class ModalFacetCtrl {
+    public loaded: boolean = false;
     public facet: string;
     public response: any;
     public buckets: Array<any>;
@@ -11,6 +12,7 @@ module mapSearch {
     private $log: ng.ILogService;
     private $http: ng.IHttpService;
     private $modalInstance: ng.ui.bootstrap.IModalServiceInstance;
+    private parent: any;
 
     /* @ngInject */
     constructor($log: ng.ILogService,
@@ -22,6 +24,7 @@ module mapSearch {
       this.$log = $log;
       this.$http = $http;
       this.$modalInstance = $modalInstance;
+      this.parent = parent;
 
       var smallQuery = jQuery.extend(true, {}, parent.searchConfig);
       smallQuery.req.rows = 0;
@@ -41,16 +44,19 @@ module mapSearch {
         .then((response: any) => {
           this.response = response.data;
           this.buckets = this.response.facets.facet.buckets;
+          this.loaded = true;
         })
         .catch((error: any) => {
           alert( status + ' ' + queryString );
           // this.$log.error('XHR To make query.\n', error.data);
+          this.loaded = true;
         });
     }
 
     /* dismiss modal instance */
     select( field: string) {
-      this.$log.info('TODO, add facet', this.facet, field);
+      this.parent.searchConfig.req.fq.push(this.facet + ':' + field);
+      this.parent.doSearch();
       this.$modalInstance.dismiss();
     }
 
