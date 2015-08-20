@@ -23,7 +23,7 @@ declare var moment: moment.MomentStatic;
 module mapSearch {
   'use strict';
 
-  angular.module('mapSearch', ['restangular', 'ui.router', 'ui.bootstrap'])
+  angular.module('mapSearch', ['restangular', 'ui.router', 'ui.bootstrap', 'leaflet-directive'])
     .constant('malarkey', malarkey)
     .constant('toastr', toastr)
     .constant('moment', moment)
