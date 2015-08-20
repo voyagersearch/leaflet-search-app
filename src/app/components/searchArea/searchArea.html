@@ -1,9 +1,7 @@
-<div class="container">
 
-<div class="row">
-  TODO... show a map!!!!
+<div class="row" style="border:5px solid red;">
   <div class="vs-map">
-    <leaflet height="100%" center="mapConfig.center" tiles="mapConfig.base"></leaflet>
+    <leaflet height="400px" width="100%" ></leaflet>
   </div>
 </div>
 
@@ -27,7 +25,7 @@
           </div>
 
           <div>
-            <button ng-repeat="fq in searchConfig.req.fq"
+            <button ng-repeat="fq in vm.searchConfig.req.fq"
                     ng-click="removeFilter(fq)"
                     class="btn btn-default btn-sm" type="button">{{fq}} <i class="fa fa-times"></i></button>
           </div>
@@ -37,7 +35,7 @@
 
         <accordion close-others="false" >
           <accordion-group
-            ng-repeat="facet in filters"
+            ng-repeat="facet in vm.facets"
             ng-init="status.open = true"
             is-open="status.open">
             <accordion-heading>
@@ -46,7 +44,7 @@
 
             <div ng-repeat="bucket in facet.value.buckets">
               <button
-                ng-if="bucket.count < srsp.facets.count"
+                ng-if="bucket.count < vm.searchRsp.facets.count"
                 ng-click="filterResults(facet.name, bucket.val)"
                 type="button"
                 class="btn btn-sm btn-default btn-block"
@@ -54,7 +52,7 @@
                 >
                 {{bucket.val}} ({{bucket.count}})
               </button>
-              <div ng-if="bucket.count >= srsp.facets.count">
+              <div ng-if="bucket.count >= vm.searchRsp.facets.count">
                 {{bucket.val}} ({{bucket.count}})
               </div>
             </div>
@@ -72,22 +70,19 @@
       </div>
       <div class="col-sm-9">
 
-        This is the top...
-        <pre>{{srsp.facets.count | json}}</pre>
+        <pre>{{vm.searchRsp.response.numFound | json}}</pre>
 
         <table class="table table-hover">
           <thead>
-          <th ng-repeat="finfo in searchConfig.view">{{finfo.display}}</th>
+            <th ng-repeat="finfo in vm.searchConfig.view">{{finfo.display}}</th>
           </thead>
           <tbody>
-          <tr ng-repeat="doc in docs" ng-click="showResult(doc)">
-            <td ng-repeat="finfo in searchConfig.view">{{doc[finfo.field]}}</td>
-          </tr>
+            <tr ng-repeat="doc in vm.searchRsp.response.docs" ng-click="showResult(doc)">
+              <td ng-repeat="finfo in vm.searchConfig.view">{{doc[finfo.field]}}</td>
+            </tr>
           </tbody>
         </table>
       </div>
     </div>
   </div>
-</div>
-
 </div>
