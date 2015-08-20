@@ -73,7 +73,6 @@ module mapSearch {
         'req': {  // end user can change this
           start: 0,
           rows: 50,
-          q: '*:*',
           fq: []
         },
         'view': [
@@ -112,6 +111,78 @@ module mapSearch {
           alert( status + ' ' + queryString );
          // this.$log.error('XHR To make query.\n', error.data);
         });
+    }
+
+    filterResults(field: string, val: string) {
+      // Get the term from the field
+      var facet = this.searchConfig.json.facet[field];
+      var fname = facet.terms.field;
+
+      this.searchConfig.req.fq.push( fname+":"+val );
+      this.doSearch();
+    }
+
+    removeFilter(fff: string) {
+      // remove the facet
+      this.searchConfig.req.fq =this.$filter('filter')(this.searchConfig.req.fq, function(item) {
+        return !(item == fff);
+      });
+
+      this.doSearch();
+    }
+
+    showConfig() {
+
+      var modalInstance = this.$modal.open({
+        animation: this.animationsEnabled,
+        templateUrl: 'partials/popup-config.html',
+        controller: 'ModalShowConfigCtrl',
+        resolve: {
+          config: function () {
+            return this.searchConfig;
+          }
+        }
+      });
+
+      modalInstance.result.then(function (config) {
+        this.searchConfig = config;
+        this.$log.info( ">>>", this.searchConfig );
+        this.doSearch();
+      });
+    }
+
+    showResult(doc: any) {
+
+      var modalInstance = this.$modal.open({
+        animation: this.animationsEnabled,
+        templateUrl: 'partials/popup-result.html',
+        controller: 'ModalShowDocCtrl',
+        resolve: {
+          doc: function () {
+            return doc;
+          },
+          parent: function() {
+            return this;
+          }
+        }
+      });
+    }
+
+
+    showAllFacetValues(facet: any) {
+      var modalInstance = this.$modal.open({
+        animation: this.animationsEnabled,
+        templateUrl: 'partials/popup-facet.html',
+        controller: 'ModalFacetCtrl',
+        resolve: {
+          facet: function () {
+            return facet;
+          },
+          parent: function() {
+            return this;
+          }
+        }
+      });
     }
   }
 }
