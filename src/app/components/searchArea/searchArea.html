@@ -17,10 +17,10 @@
           </div>
 
           <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search for..." ng-model="searchConfig.req.q"
-                   ng-keyup="$event.keyCode == 13 && doSearch()"/>
+            <input type="text" class="form-control" placeholder="Search for..." ng-model="vm.searchConfig.req.q"
+                   ng-keyup="$event.keyCode == 13 && vm.doSearch()"/>
               <span class="input-group-btn">
-                <button class="btn btn-default" type="button" ng-click="doSearch()"><i class="fa fa-search"></i></button>
+                <button class="btn btn-default" type="button" ng-click="vm.doSearch()"><i class="fa fa-search"></i></button>
               </span>
           </div>
 
