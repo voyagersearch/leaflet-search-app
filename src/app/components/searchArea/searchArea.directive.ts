@@ -97,10 +97,10 @@ module mapSearch {
         .then((response: any) => {
           this.searchRsp = response.data;
 
-          var theLog = this.$log;
+          // var theLog = this.$log;
           var facets = [];
           angular.forEach(this.searchRsp.facets, function(value, key) {
-            //theLog.info('check', key, value);
+            // theLog.info('check', key, value);
             if (key !== 'count' && key.length > 0) {
               facets.push( { name: key, value: value} );
             }
@@ -114,18 +114,18 @@ module mapSearch {
     }
 
     filterResults(field: string, val: string) {
-      // Get the term from the field
+      // get the term from the field
       var facet = this.searchConfig.json.facet[field];
       var fname = facet.terms.field;
 
-      this.searchConfig.req.fq.push( fname+":"+val );
+      this.searchConfig.req.fq.push( fname + ':' + val );
       this.doSearch();
     }
 
     removeFilter(fff: string) {
       // remove the facet
-      this.searchConfig.req.fq =this.$filter('filter')(this.searchConfig.req.fq, function(item) {
-        return !(item == fff);
+      this.searchConfig.req.fq = this.$filter('filter')(this.searchConfig.req.fq, function(item) {
+        return !(item === fff);
       });
 
       this.doSearch();
@@ -135,19 +135,20 @@ module mapSearch {
 
       var modalInstance = this.$modal.open({
         animation: this.animationsEnabled,
-        templateUrl: 'partials/popup-config.html',
+        templateUrl: 'app/components/searchArea/modal-config.html',
         controller: 'ModalShowConfigCtrl',
+        controllerAs: 'vm',
+        bindToController: true,
         resolve: {
-          config: function () {
-            return this.searchConfig;
-          }
+          config: () => this.searchConfig
         }
       });
 
+      var xthis = this;
       modalInstance.result.then(function (config) {
-        this.searchConfig = config;
-        this.$log.info( ">>>", this.searchConfig );
-        this.doSearch();
+        xthis.searchConfig = config;
+        xthis.$log.info( '>>>', xthis.searchConfig );
+        xthis.doSearch();
       });
     }
 
@@ -155,32 +156,27 @@ module mapSearch {
 
       var modalInstance = this.$modal.open({
         animation: this.animationsEnabled,
-        templateUrl: 'partials/popup-result.html',
+        templateUrl: 'app/components/searchArea/modal-result.html',
         controller: 'ModalShowDocCtrl',
+        controllerAs: 'vm',
+        bindToController: true,
         resolve: {
-          doc: function () {
-            return doc;
-          },
-          parent: function() {
-            return this;
-          }
+          doc: () => doc,
+          parent: () => this
         }
       });
     }
 
-
     showAllFacetValues(facet: any) {
       var modalInstance = this.$modal.open({
         animation: this.animationsEnabled,
-        templateUrl: 'partials/popup-facet.html',
+        templateUrl: 'app/components/searchArea/modal-facet.html',
         controller: 'ModalFacetCtrl',
+        controllerAs: 'vm',
+        bindToController: true,
         resolve: {
-          facet: function () {
-            return facet;
-          },
-          parent: function() {
-            return this;
-          }
+          facet: () => facet,
+          parent: () => this
         }
       });
     }
