@@ -1,5 +1,6 @@
 <div class="modal-header">
-    <h3 class="modal-title">{{vm.facet}}</h3>
+  <button class="btn btn-primary pull-right" type="button" ng-click="vm.ok()">OK</button>
+  <h3 class="modal-title">{{vm.facet}}</h3>
 </div>
 <div class="modal-body">
   <i class="fa fa-circle-o-notch fa-spin fa-4x" ng-hide="vm.loaded"></i>
@@ -8,7 +9,4 @@
             <a href="#" ng-click="$event.preventDefault(); vm.select(bucket.val);">{{ bucket.val }} ({{ bucket.count }})</a>
         </li>
     </ul>
-</div>
-<div class="modal-footer">
-    <button class="btn btn-primary" type="button" ng-click="vm.ok()">OK</button>
 </div>

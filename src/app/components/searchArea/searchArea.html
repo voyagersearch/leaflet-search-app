@@ -28,6 +28,19 @@
                     class="btn btn-default btn-sm" type="button">{{fq}} <i class="fa fa-times"></i></button>
           </div>
         </div>
+        <br/>
+        <div>
+          <div>
+            <b>Spatial:</b>
+            <div class="checkbox" style="margin-top:0px; padding-top:0px;">
+              <label ng-click="vm.doSearch()">
+                <input type="checkbox" ng-model="vm.searchWithinMapView"> Search Within Map
+              </label>
+            </div>
+            <!--
+            <input readonly="readonly" type="text" value="xxxx" style="width:100%"/>  -->
+          </div>
+        </div>
         <br/><br/>
 
 

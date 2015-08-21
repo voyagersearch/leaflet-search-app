@@ -96,7 +96,7 @@ module mapSearch {
             type: "agsBase",
             layer: "Gray",
             visible: false
-          }
+          },
           //  darkgray: {
           //    name: "DarkGray",
           //    type: "agsBase",
@@ -143,13 +143,45 @@ module mapSearch {
           //      attribution: "Copyright:© 2014 Esri, FAO, NOAA"
           //    }
           //  }
-          //},
+          //
         },
         overlays: {
           searchlayer: {
             name: 'Search Results',
             type: 'markercluster',
             visible: true
+          },
+          irrcap: {
+            name: "USA Soil Survey",
+            type: "agsTiled",
+            url: "http://server.arcgisonline.com/ArcGIS/rest/services/Specialty/Soil_Survey_Map/MapServer",
+            visible: false,
+            layerOptions: {
+              layers: [0],
+              opacity: 0.9,
+              attribution: "USDA/NRCS SSURGO"
+            }
+          },
+          wtdepth: {
+            name: "Water Table Depth",
+            type: "agsDynamic",
+            url: "http://soils.esri.com/ArcGIS/rest/services/soils/WaterTableDepth-Annual-Minimum/MapServer",
+            visible: false,
+            layerOptions: {
+              layers: [0],
+              opacity: 0.9
+            }
+          },
+          whydro: {
+            name: "World Hydro",
+            type: "agsTiled",
+            url: "http://hydrology.esri.com/arcgis/rest/services/WorldHydroReferenceOverlay/MapServer",
+            visible: false,
+            layerOptions: {
+              layers: [0],
+              opacity: 0.9,
+              attribution: "Copyright:© 2014 Esri, FAO, NOAA"
+            }
           },
           wms: {
             name: 'EEUU States (WMS)',
@@ -164,7 +196,6 @@ module mapSearch {
           }
         }
       };
-
 
 
       this.markers = {
@@ -354,7 +385,7 @@ module mapSearch {
           'url': 'http://localhost:8080/solr/usgs/select',
           'json': {   // end user can *not* change this
             'params': {
-              'fl': '*',
+              'fl': 'name:station_nm,*',
             },
             'facet': {
               'Entry Type': {
@@ -390,7 +421,7 @@ module mapSearch {
           },
           'view': [
             {'field': 'id', 'display': 'ID'},
-            {'field': 'station_nm', 'display': 'Name'},
+            {'field': 'name', 'display': 'Name'},
             {'field': 'site_tp_cd', 'display': 'Type'}
           ]
         };
