@@ -1,0 +1,74 @@
+{
+  "url": "http://localhost:8080/solr/drop3/select",
+  "json": {
+    "params": {
+      "fl": "*",
+      "sort": "fu_head_measurement_m_from_water_surface_to_water_surface desc"
+    },
+    "facet": {
+      "Site Type": {
+        "terms": {
+          "field": "type",
+          "limit": 5
+        }
+      },
+      "Project": {
+        "terms": {
+          "field": "fs_project",
+          "limit": 5
+        }
+      },
+      "Head Type": {
+        "terms": {
+          "field": "fss_head_type",
+          "limit": 5
+        }
+      },
+      "Terrain Type": {
+        "terms": {
+          "field": "fss_terrain",
+          "limit": 5
+        }
+      },
+      "Road Access": {
+        "terms": {
+          "field": "fs_road_access",
+          "limit": 5
+        }
+      },
+      "Properties": {
+        "terms": {
+          "field": "properties",
+          "limit": 5
+        }
+      }
+    }
+  },
+  "req": {
+    "start": 0,
+    "rows": 250,
+    "fq": []
+  },
+  "view": [
+    {
+      "field": "name",
+      "display": "Name",
+      "$$hashKey": "object:8"
+    },
+    {
+      "field": "fu_head_measurement_m_from_water_surface_to_water_surface",
+      "display": "Head",
+      "$$hashKey": "object:9"
+    },
+    {
+      "field": "fu_average_flow_cms",
+      "display": "Flow",
+      "$$hashKey": "object:10"
+    },
+    {
+      "field": "fs_road_access",
+      "display": "Road",
+      "$$hashKey": "object:11"
+    }
+  ]
+}

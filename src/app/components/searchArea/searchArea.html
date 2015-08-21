@@ -80,7 +80,10 @@
         </accordion>
       </div>
       <div class="col-sm-9">
-        <pre>{{vm.getResultCountString()}}</pre>
+        <div class="well">
+          {{vm.getResultCountString()}}
+          <div class="pull-right">show: <input ng-model="vm.searchConfig.req.rows" style="width:40px;" type="text" ng-keyup="$event.keyCode == 13 && vm.doSearch()"/></div>
+        </div>
 
         <table class="table table-hover">
           <thead>

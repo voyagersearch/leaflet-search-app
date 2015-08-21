@@ -43,6 +43,7 @@ module mapSearch {
       this.$http.jsonp(queryString)
         .then((response: any) => {
           this.response = response.data;
+          console.log('GOT', this.response);
           this.buckets = this.response.facets.facet.buckets;
           this.loaded = true;
         })

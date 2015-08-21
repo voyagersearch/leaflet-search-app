@@ -1,0 +1,53 @@
+{
+  "url": "http://localhost:8080/solr/usgs/select",
+  "json": {
+    "params": {
+      "fl": "name:station_nm,*"
+    },
+    "facet": {
+      "Site Type": {
+        "terms": {
+          "field": "site_tp_cd",
+          "limit": 5
+        }
+      },
+      "State": {
+        "terms": {
+          "field": "state",
+          "limit": 5
+        }
+      },
+      "HUC": {
+        "terms": {
+          "field": "huc_cd",
+          "limit": 5
+        }
+      },
+      "Entry Type": {
+        "terms": {
+          "field": "type",
+          "limit": 5
+        }
+      }
+    }
+  },
+  "req": {
+    "start": 0,
+    "rows": 250,
+    "fq": []
+  },
+  "view": [
+    {
+      "field": "id",
+      "display": "ID"
+    },
+    {
+      "field": "name",
+      "display": "Name"
+    },
+    {
+      "field": "site_tp_cd",
+      "display": "Type"
+    }
+  ]
+}

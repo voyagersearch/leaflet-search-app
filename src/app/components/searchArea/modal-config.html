@@ -1,10 +1,20 @@
 <div class="modal-header">
+  <button class="btn btn-primary pull-right" type="button" ng-click="vm.ok()">Update</button>
+  <button class="btn btn-warning pull-right" type="button" ng-click="vm.cancel()">Cancel</button>
   <h3 class="modal-title">Configuration</h3>
 </div>
 <div class="modal-body">
+
   <textarea ng-model="vm.json" class="form-control" rows="20"></textarea>
-</div>
-<div class="modal-footer">
-  <button class="btn btn-primary" type="button" ng-click="vm.ok()">OK</button>
-  <button class="btn btn-warning" type="button" ng-click="vm.cancel()">Cancel</button>
+
+  <!-- Single button -->
+  <div class="btn-group" dropdown is-open="status.isopen">
+    <button id="single-button" type="button" class="btn btn-default" dropdown-toggle>
+      Load Config <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
+      <li ng-repeat="cfg in vm.configs" ng-click="vm.load(cfg)" role="menuitem"><a href="#">{{cfg.name}}</a></li>
+    </ul>
+  </div>
+
 </div>

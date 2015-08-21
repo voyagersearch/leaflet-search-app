@@ -5,6 +5,7 @@ module mapSearch {
 
   export class ModalShowConfigCtrl {
     public json : string;
+    public configs: Array<any>;
 
     private $log: ng.ILogService;
     private $http: ng.IHttpService;
@@ -20,9 +21,27 @@ module mapSearch {
       this.$http = $http;
       this.$modalInstance = $modalInstance;
 
+      this.configs = [
+        {name: 'USGS', path: 'config-usgs.json' },
+        {name: 'Fulcrum', path: 'config-drop3.json' },
+      ];
+
       this.json = JSON.stringify(config, null, 2);
 
       this.$log.info('CONFIG', this.json);
+    }
+
+    load(cfg:any) {
+      this.$http.get('app/components/searchArea/'+cfg.path)
+        .then((response: any) => {
+          this.$log.info( 'GOT', response.data );
+          this.json = JSON.stringify(response.data, null, 2);
+        })
+        .catch((error: any) => {
+          alert( status + ' ' + error );
+          // this.$log.error('XHR To make query.\n', error.data);
+        });
+
     }
 
     /* dismiss modal instance */

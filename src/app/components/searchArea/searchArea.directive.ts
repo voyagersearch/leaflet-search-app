@@ -172,6 +172,16 @@ module mapSearch {
               opacity: 0.9
             }
           },
+          huc12: {
+            name: "HUC (NHD)",
+            type: "agsDynamic",
+            url: "http://services.nationalmap.gov/ArcGIS/rest/services/nhd/MapServer",
+            visible: false,
+            //layerOptions: {
+            //  layers: [0],
+            //  opacity: 0.9
+            //}
+          },
           whydro: {
             name: "World Hydro",
             type: "agsTiled",
@@ -276,6 +286,7 @@ module mapSearch {
       //  });
       //}
 
+      // https://www.planet.com/docs/v0/tutorials/leaflet-mosaic-tiles.html
 
       this.animationsEnabled = true; // for the popup
       this.searchConfig = {
@@ -380,7 +391,7 @@ module mapSearch {
       }
 
 
-      if(true) {
+      if(false) {
         this.searchConfig = {
           'url': 'http://localhost:8080/solr/usgs/select',
           'json': {   // end user can *not* change this
@@ -388,12 +399,6 @@ module mapSearch {
               'fl': 'name:station_nm,*',
             },
             'facet': {
-              'Entry Type': {
-                'terms': {
-                  'field': 'type',
-                  'limit': 5
-                }
-              },
               'Site Type': {
                 'terms': {
                   'field': 'site_tp_cd',
@@ -402,7 +407,7 @@ module mapSearch {
               },
               'State': {
                 'terms': {
-                  'field': 'state_cd',
+                  'field': 'state',
                   'limit': 5
                 }
               },
@@ -411,7 +416,13 @@ module mapSearch {
                   'field': 'huc_cd',
                   'limit': 5
                 }
-              }
+              },
+              'Entry Type': {
+                'terms': {
+                  'field': 'type',
+                  'limit': 5
+                }
+              },
             }
           },
           'req': {  // end user can change this
