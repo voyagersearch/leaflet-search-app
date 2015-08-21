@@ -349,6 +349,53 @@ module mapSearch {
       }
 
 
+      if(true) {
+        this.searchConfig = {
+          'url': 'http://localhost:8080/solr/usgs/select',
+          'json': {   // end user can *not* change this
+            'params': {
+              'fl': '*',
+            },
+            'facet': {
+              'Entry Type': {
+                'terms': {
+                  'field': 'type',
+                  'limit': 5
+                }
+              },
+              'Site Type': {
+                'terms': {
+                  'field': 'site_tp_cd',
+                  'limit': 5
+                }
+              },
+              'State': {
+                'terms': {
+                  'field': 'state_cd',
+                  'limit': 5
+                }
+              },
+              'HUC': {
+                'terms': {
+                  'field': 'huc_cd',
+                  'limit': 5
+                }
+              }
+            }
+          },
+          'req': {  // end user can change this
+            start: 0,
+            rows: 250,
+            fq: []
+          },
+          'view': [
+            {'field': 'id', 'display': 'ID'},
+            {'field': 'station_nm', 'display': 'Name'},
+            {'field': 'site_tp_cd', 'display': 'Type'}
+          ]
+        };
+      }
+
       this.doSearch(); // initalize the response
     }
 
@@ -363,6 +410,10 @@ module mapSearch {
     }
 
     getResultCountString() {
+      if(!this.searchRsp.response) {
+        return "...";
+      }
+
       var start = this.searchConfig.req.start;
       var end = start + this.searchRsp.response.docs.length;
       var count = this.searchRsp.response.numFound;
@@ -484,8 +535,9 @@ module mapSearch {
 
       this.center.lat = doc.lat;
       this.center.lng = doc.lng;
-      this.center.zoom = 11;
-
+      if(12>this.center.zoom) {
+        this.center.zoom = 12;
+      }
       console.log("center", this.center);
     }
 
