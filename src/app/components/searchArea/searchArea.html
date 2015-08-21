@@ -1,7 +1,7 @@
 
-<div class="row" style="border:5px solid red;">
+<div class="row">
   <div class="vs-map">
-    <leaflet height="400px" width="100%" ></leaflet>
+    <leaflet event-broadcast="vm.events" markers="vm.markers" center="vm.center" layers="vm.layers" height="400px" width="100%" ></leaflet>
   </div>
 </div>
 
@@ -69,7 +69,6 @@
         </accordion>
       </div>
       <div class="col-sm-9">
-
         <pre>{{vm.searchRsp.response.numFound | json}}</pre>
 
         <table class="table table-hover">
