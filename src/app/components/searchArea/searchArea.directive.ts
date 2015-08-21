@@ -74,27 +74,27 @@ module mapSearch {
           //  visible: false
           //},
           topo: {
-            name: "World Topographic",
-            type: "agsBase",
-            layer: "Topographic",
+            name: 'World Topographic',
+            type: 'agsBase',
+            layer: 'Topographic',
             visible: false
           },
           national: {
-            name: "National Geographic",
-            type: "agsBase",
-            layer: "NationalGeographic",
+            name: 'National Geographic',
+            type: 'agsBase',
+            layer: 'NationalGeographic',
             visible: false
           },
           oceans: {
-            name: "Oceans",
-            type: "agsBase",
-            layer: "Oceans",
+            name: 'Oceans',
+            type: 'agsBase',
+            layer: 'Oceans',
             visible: false
           },
           gray: {
-            name: "Gray",
-            type: "agsBase",
-            layer: "Gray",
+            name: 'Gray',
+            type: 'agsBase',
+            layer: 'Gray',
             visible: false
           },
           googleTerrain: {
@@ -304,26 +304,24 @@ module mapSearch {
       // https://www.planet.com/docs/v0/tutorials/leaflet-mosaic-tiles.html
 
       this.animationsEnabled = true; // for the popup
+      this.searchConfig = {};
 
       this.$http.get('app/components/searchArea/config-drop3.json')
         .then((response: any) => {
           this.searchConfig = response.data;
-
-
           this.doSearch(); // initalize the response
         })
         .catch((error: any) => {
           this.$log.error('Get Config ERROR!', error);
           this.searchConfig = {};
         });
-
     }
 
-    private clampIN(abs:number, val:number) {
-      if(val > abs) {
+    private clampIN( abs:number, val:number ) {
+      if( val > abs ) {
         return abs;
       }
-      if(val < -abs) {
+      if( val < -abs ) {
         return -abs;
       }
       return val;
@@ -387,13 +385,13 @@ module mapSearch {
           this.$log.info( 'before update markers...', this.markers.length );
 
           var allmarkers = [];
-          angular.forEach(this.searchRsp.response.docs, (doc:any) => {
-            if(doc.lat) {
+          angular.forEach( this.searchRsp.response.docs, (doc:any) => {
+            if( doc.lat ) {
               allmarkers.push( {
                 doc: doc,
                 lat: doc.lat,
                 lng: doc.lng,
-                layer: 'searchlayer'
+                layer: 'searchlayer',
               });
             }
             else {
@@ -455,7 +453,7 @@ module mapSearch {
 
       this.center.lat = doc.lat;
       this.center.lng = doc.lng;
-      if(12>this.center.zoom) {
+      if( 12 > this.center.zoom ) {
         this.center.zoom = 12;
       }
       console.log("center", this.center);
