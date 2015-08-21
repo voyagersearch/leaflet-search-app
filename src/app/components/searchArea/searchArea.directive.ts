@@ -5,7 +5,6 @@ module mapSearch {
 
   /** @ngInject */
   export function searchArea(): ng.IDirective {
-
     return {
       restrict: 'E',
       scope: {
@@ -16,7 +15,6 @@ module mapSearch {
       controllerAs: 'vm',
       bindToController: true
     };
-
   }
 
 
@@ -29,11 +27,12 @@ module mapSearch {
 
     // for leaflet
     public center: any;
+    public bounds: any;
     public layers: any;
     public markers: any;
     public events: any;
-    public eventDetected: any;
 
+    private searchWithinMapView: boolean = true;
     private animationsEnabled: boolean;
 
     private $log: ng.ILogService;
@@ -60,8 +59,6 @@ module mapSearch {
       this.$scope = $scope;
       this.$compile = $compile;
       this.$leafletEvents = leafletEvents;
-
-      console.log( '>>> ', leafletEvents );
 
       this.layers = {
         baselayers: {
@@ -208,25 +205,45 @@ module mapSearch {
         if(args.model.doc) {
           this.showResult(args.model.doc);
         }
+        else {
+          console.log('click', args);//, e, args);
+        }
       });
 
+
+      $scope.$on('leafletDirectiveMap.viewreset', (e, args) => {
+        console.log('viewreset', this.bounds, e, args);//, e, args);
+        if(this.searchWithinMapView) {
+          this.doSearch();
+        }
+      });
+
+      $scope.$on('leafletDirectiveMap.dragend', (e, args) => {
+        console.log('dragend', this.bounds, e, args);//, e, args);
+        if(this.searchWithinMapView) {
+          this.doSearch();
+        }
+      });
 
       this.events = {
         markers: {
           enable: this.$leafletEvents.getAvailableMarkerEvents(),
+        },
+        map: {
+          enable: ['dragend', 'viewreset'],
+          logic: 'emit'
         }
       };
 
-      this.eventDetected = "No events yet...";
-      var markerEvents = this.$leafletEvents.getAvailableMarkerEvents();
-      for (var k in markerEvents){
-        var eventName = 'leafletDirectiveMarker.' + markerEvents[k];
-        this.$scope.$on(eventName, (event, args) => {
-          this.eventDetected = event.name;
-          console.log( "EVENT", event.name, event, args);
-        });
-      }
-
+      //this.eventDetected = "No events yet...";
+      //var markerEvents = this.$leafletEvents.getAvailableMarkerEvents();
+      //for (var k in markerEvents){
+      //  var eventName = 'leafletDirectiveMarker.' + markerEvents[k];
+      //  this.$scope.$on(eventName, (event, args) => {
+      //    this.eventDetected = event.name;
+      //    console.log( "EVENT", event.name, event, args);
+      //  });
+      //}
 
 
       this.animationsEnabled = true; // for the popup
@@ -308,12 +325,18 @@ module mapSearch {
                   'field': 'fs_road_access',
                   'limit': 5
                 }
+              },
+              'Properties': {
+                'terms': {
+                  'field': 'properties',
+                  limit:5
+                }
               }
             }
           },
           'req': {  // end user can change this
             start: 0,
-            rows: 50,
+            rows: 250,
             fq: []
           },
           'view': [
@@ -329,12 +352,48 @@ module mapSearch {
       this.doSearch(); // initalize the response
     }
 
+    private clampIN(abs:number, val:number) {
+      if(val > abs) {
+        return abs;
+      }
+      if(val < -abs) {
+        return -abs;
+      }
+      return val;
+    }
+
+    getResultCountString() {
+      var start = this.searchConfig.req.start;
+      var end = start + this.searchRsp.response.docs.length;
+      var count = this.searchRsp.response.numFound;
+      if(count>this.searchRsp.response.docs.length) {
+        return start + ' to ' + end + ' of ' + count;
+      }
+      return ''+count;
+    }
+
+    getBBoxFQ() {
+      if(this.bounds && this.searchWithinMapView) {
+        console.log( "BOUNDS", this.bounds );
+        // clamp the request...
+        var xmin = this.clampIN(  90, this.bounds.southWest.lat);
+        var ymin = this.clampIN( 180, this.bounds.southWest.lng);
+        var xmax = this.clampIN(  90, this.bounds.northEast.lat);
+        var ymax = this.clampIN( 180, this.bounds.northEast.lng);
+        var fq = "&fq=geo:["+xmin+","+ymin+" TO "+xmax+","+ymax+"]";
+
+        console.log( "BOUNDS", this.bounds, fq );
+        return fq;
+      }
+      return "";
+    }
+
     doSearch() {
 
       var queryString = this.searchConfig.url;
       queryString += '?json=' + JSON.stringify(this.searchConfig.json);
       queryString += '&' + jQuery.param(this.searchConfig.req, true); // the user configs
-      queryString += '&wt=json&json.wrf=JSON_CALLBACK';  // jsonp
+      queryString += this.getBBoxFQ() + '&wt=json&json.wrf=JSON_CALLBACK';  // jsonp
 
       // this.$log.info('QUERY', queryString);
 
@@ -354,24 +413,25 @@ module mapSearch {
           this.facets = facets;
 
 
-          this.$log.info( 'update markers...', this.markers );
+          this.$log.info( 'before update markers...', this.markers.length );
 
-          this.markers.length = 0;
+          var allmarkers = [];
           angular.forEach(this.searchRsp.response.docs, (doc:any) => {
-
             if(doc.lat) {
-              this.markers.push( {
+              allmarkers.push( {
                 doc: doc,
                 lat: doc.lat,
                 lng: doc.lng,
                 layer: 'searchlayer'
               });
             }
+            else {
+              console.log("no lat", doc);
+            }
           });
-       //   this.markers = newmarkers;
-          //this.markers = angular.extend(this.$scope, {
-          //  markers: newmarkers
-          //});
+          this.markers = allmarkers;
+
+          this.$log.info( 'after update markers...', this.markers.length );
 
         })
         .catch((error: any) => {
@@ -417,6 +477,16 @@ module mapSearch {
         xthis.$log.info( '>>>', xthis.searchConfig );
         xthis.doSearch();
       });
+    }
+
+    showOnMap(doc: any) {
+      console.log("show", doc);
+
+      this.center.lat = doc.lat;
+      this.center.lng = doc.lng;
+      this.center.zoom = 11;
+
+      console.log("center", this.center);
     }
 
     showResult(doc: any) {

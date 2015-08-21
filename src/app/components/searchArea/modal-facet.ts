@@ -38,7 +38,7 @@ module mapSearch {
       var queryString = smallQuery.url;
       queryString += '?json=' + JSON.stringify(smallQuery.json);
       queryString += '&' + $.param(smallQuery.req, true); // the user configs
-      queryString += '&wt=json&json.wrf=JSON_CALLBACK';  //jsonp
+      queryString += parent.getBBoxFQ() + '&wt=json&json.wrf=JSON_CALLBACK';  //jsonp
 
       this.$http.jsonp(queryString)
         .then((response: any) => {
