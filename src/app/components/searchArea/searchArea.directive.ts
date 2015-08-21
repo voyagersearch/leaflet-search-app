@@ -97,6 +97,21 @@ module mapSearch {
             layer: "Gray",
             visible: false
           },
+          googleTerrain: {
+            name: 'Google Terrain',
+            layerType: 'TERRAIN',
+            type: 'google'
+          },
+          googleHybrid: {
+            name: 'Google Hybrid',
+            layerType: 'HYBRID',
+            type: 'google'
+          },
+          googleRoadmap: {
+            name: 'Google Streets',
+            layerType: 'ROADMAP',
+            type: 'google'
+          }
           //  darkgray: {
           //    name: "DarkGray",
           //    type: "agsBase",
@@ -289,156 +304,19 @@ module mapSearch {
       // https://www.planet.com/docs/v0/tutorials/leaflet-mosaic-tiles.html
 
       this.animationsEnabled = true; // for the popup
-      this.searchConfig = {
-        'url': 'http://voyagerdemo.com/daily/solr/v0/select',
-        'json': {   // end user can *not* change this
-          'params': {
-            'fl': 'name:[name],path:[absolute],format,properties,keywords'
-          },
-          'facet': {
-            'Open In Application': {
-              'terms': {
-                'field': 'format_app',
-                'limit': 5
-              }
-            },
-            'Properties': {
-              'terms': {
-                'field': 'properties',
-                'limit': 5
-              }
-            },
-            'Keywords': {
-              'terms': {
-                'field': 'keywords',
-                'limit': 5
-              }
-            }
-          }
-        },
-        'req': {  // end user can change this
-          start: 0,
-          rows: 50,
-          fq: []
-        },
-        'view': [
-          {'field': 'name', 'display': 'Name'},
-          {'field': 'path', 'display': 'Path'}
-        ]
-      };
+
+      this.$http.get('app/components/searchArea/config-drop3.json')
+        .then((response: any) => {
+          this.searchConfig = response.data;
 
 
+          this.doSearch(); // initalize the response
+        })
+        .catch((error: any) => {
+          this.$log.error('Get Config ERROR!', error);
+          this.searchConfig = {};
+        });
 
-      if(true) {
-        this.searchConfig = {
-          'url': 'http://localhost:8080/solr/drop3/select',
-          'json': {   // end user can *not* change this
-            'params': {
-              'fl': '*',
-              'sort': 'fu_head_measurement_m_from_water_surface_to_water_surface desc'
-            },
-            'facet': {
-              'Site Type': {
-                'terms': {
-                  'field': 'type',
-                  'limit': 5
-                }
-              },
-              'Project': {
-                'terms': {
-                  'field': 'fs_project',
-                  'limit': 5
-                }
-              },
-              'Head Type': {
-                'terms': {
-                  'field': 'fss_head_type',
-                  'limit': 5
-                }
-              },
-              'Terrain Type': {
-                'terms': {
-                  'field': 'fss_terrain',
-                  'limit': 5
-                }
-              },
-              'Road Access': {
-                'terms': {
-                  'field': 'fs_road_access',
-                  'limit': 5
-                }
-              },
-              'Properties': {
-                'terms': {
-                  'field': 'properties',
-                  limit:5
-                }
-              }
-            }
-          },
-          'req': {  // end user can change this
-            start: 0,
-            rows: 250,
-            fq: []
-          },
-          'view': [
-            {'field': 'name', 'display': 'Name'},
-            {'field': 'fu_head_measurement_m_from_water_surface_to_water_surface', 'display': 'Head'} ,
-            {'field': 'fu_average_flow_cms', 'display': 'Flow'},
-            {'field': 'fs_road_access', 'display': 'Road'}
-          ]
-        };
-      }
-
-
-      if(false) {
-        this.searchConfig = {
-          'url': 'http://localhost:8080/solr/usgs/select',
-          'json': {   // end user can *not* change this
-            'params': {
-              'fl': 'name:station_nm,*',
-            },
-            'facet': {
-              'Site Type': {
-                'terms': {
-                  'field': 'site_tp_cd',
-                  'limit': 5
-                }
-              },
-              'State': {
-                'terms': {
-                  'field': 'state',
-                  'limit': 5
-                }
-              },
-              'HUC': {
-                'terms': {
-                  'field': 'huc_cd',
-                  'limit': 5
-                }
-              },
-              'Entry Type': {
-                'terms': {
-                  'field': 'type',
-                  'limit': 5
-                }
-              },
-            }
-          },
-          'req': {  // end user can change this
-            start: 0,
-            rows: 250,
-            fq: []
-          },
-          'view': [
-            {'field': 'id', 'display': 'ID'},
-            {'field': 'name', 'display': 'Name'},
-            {'field': 'site_tp_cd', 'display': 'Type'}
-          ]
-        };
-      }
-
-      this.doSearch(); // initalize the response
     }
 
     private clampIN(abs:number, val:number) {

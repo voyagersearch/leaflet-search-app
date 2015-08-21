@@ -1,0 +1,45 @@
+{
+  "url": "http://voyagerdemo.com/daily/solr/v0/select",
+  "json": {
+    "params": {
+      "fl": "name:[name],path:[absolute],format,properties,keywords"
+    },
+    "facet": {
+      "Open In Application": {
+        "terms": {
+          "field": "format_app",
+          "limit": 5
+        }
+      },
+      "Properties": {
+        "terms": {
+          "field": "properties",
+          "limit": 5
+        }
+      },
+      "Keywords": {
+        "terms": {
+          "field": "keywords",
+          "limit": 5
+        }
+      }
+    }
+  },
+  "req": {
+    "start": 0,
+    "rows": 50,
+    "fq": []
+  },
+  "view": [
+    {
+      "field": "name",
+      "display": "Name",
+      "$$hashKey": "object:8"
+    },
+    {
+      "field": "path",
+      "display": "Path",
+      "$$hashKey": "object:9"
+    }
+  ]
+}
