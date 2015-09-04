@@ -8,7 +8,7 @@
     "facet": {
       "Site Type": {
         "terms": {
-          "field": "type",
+          "field": "prop_site_type",
           "limit": 5
         }
       },
@@ -20,13 +20,13 @@
       },
       "Head Type": {
         "terms": {
-          "field": "fss_head_type",
+          "field": "prop_head_type",
           "limit": 5
         }
       },
       "Terrain Type": {
         "terms": {
-          "field": "fss_terrain",
+          "field": "prop_terrain",
           "limit": 5
         }
       },
@@ -38,7 +38,7 @@
       },
       "Properties": {
         "terms": {
-          "field": "properties",
+          "field": "prop",
           "limit": 5
         }
       }

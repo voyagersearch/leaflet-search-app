@@ -163,7 +163,7 @@ module mapSearch {
         overlays: {
           searchlayer: {
             name: 'Search Results',
-            type: 'markercluster',
+            type: 'group',
             visible: true
           },
           irrcap: {
@@ -386,7 +386,7 @@ module mapSearch {
 
           var allmarkers = [];
           angular.forEach( this.searchRsp.response.docs, (doc:any) => {
-            if( doc.lat ) {
+            if( isFinite(doc.lat) && !isNaN(doc.lat) ) {
               allmarkers.push( {
                 doc: doc,
                 lat: doc.lat,
@@ -399,6 +399,8 @@ module mapSearch {
             }
           });
           this.markers = allmarkers;
+
+
 
           this.$log.info( 'after update markers...', this.markers.length );
 
